@@ -32,7 +32,9 @@ public:
 
     void clientCloseException(const TcpConnectionPtr &coon);
 
-private:
+    void oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time);
+
+    private :
     // 将构造函数私有化，构造单例模式
     ChatService();
 

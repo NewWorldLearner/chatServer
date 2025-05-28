@@ -48,6 +48,7 @@ void ChatServer::onConnection(const TcpConnectionPtr &conn)
 void ChatServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timestamp time)
 {
     string buf = buffer->retrieveAllAsString();
+    // 当buf并非json格式式，下面的解析就会产生错误
     json js = json::parse(buf);
     // 解耦网络模块的代码与业务模块的代码
     auto msgHandler = ChatService::instance()->getHandler(js["msgid"].get<int>());
