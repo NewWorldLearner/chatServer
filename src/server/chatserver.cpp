@@ -3,6 +3,8 @@
 #include <iostream>
 #include <functional>
 #include <string>
+#include <chatservice.hpp>
+
 using namespace std;
 using namespace placeholders;
 using json = nlohmann::json;
@@ -45,6 +47,9 @@ void ChatServer::onConnection(const TcpConnectionPtr &conn)
 void ChatServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timestamp time)
 {
     string buf = buffer->retrieveAllAsString();
-    cout << "recv data:" << buf << " time:" << time.toFormattedString() << endl;
-    conn->send(buf);
+    json js = json::parse(buf);
+    // 解耦网络模块的代码与业务模块的代码
+    auto msgHandler = ChatService::instance()->getHandler(js["msgid"].get<int>());
+    // 回调消息绑定好的事件处理器，执行相应的业务处理
+    msgHandler(conn, js, time);
 }

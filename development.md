@@ -181,4 +181,47 @@ g++ test_muduo.cpp -lmuduo_net -lmuduo_base
 关闭防火墙：
 telnet 43.139.152.229 6000
 
+## 业务模块
 
+我们不希望网络模块与业务模块存在强耦合，因此我们通过回调函数，将网络模块的代码与业务模块的代码分隔开来。
+
+## 安装mysql
+
+我使用的是腾讯的云服务器，上面似乎默认安装了mysql，但是我不知道mysql的初始密码，因此我需要先把原来的mysql卸载掉。
+yum remove mysql mysql-server mysql-libs compat-mysql51
+rm -rf /var/lib/mysq
+rm /etc/my.cnf
+find / -name mysql
+然后删掉找出来的mysql文件
+
+使用yum install命令的时候，并不能直接安装mysql，似乎与/etc/yum.conf中的配置有关，该配置中排除了mysql等软件的安装。
+我使用的是如下的命令来安装mysql，默认没有初始密码。
+
+dnf -y install mysql-server
+
+systemctl start mysqld
+
+mysql -uroot -p
+
+-- 修改密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'NewPassword123!';
+
+-- 刷新权限
+FLUSH PRIVILEGES;
+
+-- 退出
+exit;
+
+## 实现数据库代码封装
+
+我们希望将业务模块与数据模块拆分开来，使得业务某块处理的都是数据对象，而非赤裸裸的实际数据。
+
+我们使用的数据库是mysql，通过c++代码来操作数据库时，需要使用到mysql提供的三方库。
+
+在查找mysql的开发库的时候，我替换了腾讯云服务器的源，但还是找不到mysql的开发包，于是使用命令来查看源中的mysql相关开发包
+sudo yum search mysql*devel
+
+查找到如下开发包并安装
+sudo yum install mysql-devel.x86_64
+
+经过以上，我们就可以成功使用mysql的开发包了。
