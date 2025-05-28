@@ -11,6 +11,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/server)
 include_directories(${PROJECT_SOURCE_DIR}/include/server/db)
+include_directories(${PROJECT_SOURCE_DIR}/include/server/model)
+
 
 # 这一步是必要的，否则会找不到mysqlclient文件
 link_directories(/usr/lib64/mysql)

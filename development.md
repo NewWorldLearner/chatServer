@@ -225,3 +225,18 @@ sudo yum search mysql*devel
 sudo yum install mysql-devel.x86_64
 
 经过以上，我们就可以成功使用mysql的开发包了。
+
+## 数据库表设计
+
+创建user表，注意要先创建数据库chat，并切换到该数据库中创建相应的表
+
+CREATE TABLE user (
+    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    name VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名',
+    password VARCHAR(50) NOT NULL COMMENT '用户密码',
+    state ENUM('online', 'offline') DEFAULT 'offline' NOT NULL COMMENT '登录状态'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+## 处理用户注册业务
+
+所谓的用户注册，就是在数据库的user表中添加用户的信息，最重要的就是用户名和密码。
