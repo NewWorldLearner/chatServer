@@ -30,6 +30,8 @@ public:
 
     MsgHandler getHandler(int msgid);
 
+    void clientCloseException(const TcpConnectionPtr &coon);
+
 private:
     // 将构造函数私有化，构造单例模式
     ChatService();
