@@ -47,7 +47,45 @@ MsgHandler ChatService::getHandler(int msgid)
 // 处理登录业务, 在业务层操作的都是数据对象，将业务模块与数据模块拆分开来
 void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
 {
-    LOG_INFO <<"user login!";
+    int id = js["id"].get<int>();
+    string pwd = js["password"];
+
+    User user = _userModel.query(id);
+    if (user.getId() == id && user.getPwd() == pwd)
+    {
+        if (user.getState() == "online")
+        {
+            // 该用户已经登录，不允许重复登录
+            json response;
+            response["msgid"] = LOGIN_MSG_ACK;
+            response["errno"] = 2;
+            response["errmsg"] = "this account is using, input another!";
+            conn->send(response.dump());
+        }
+        else
+        {
+            // 登录成功，更新用户状态信息 state offline=>online
+            user.setState("online");
+            _userModel.updateState(user);
+
+            json response;
+            response["msgid"] = LOGIN_MSG_ACK;
+            response["errno"] = 0;
+            response["id"] = user.getId();
+            response["name"] = user.getName();
+
+            conn->send(response.dump());
+        }
+    }
+    else
+    {
+        // 该用户不存在，用户存在但是密码错误，登录失败
+        json response;
+        response["msgid"] = LOGIN_MSG_ACK;
+        response["errno"] = 1;
+        response["errmsg"] = "id or password is invalid!";
+        conn->send(response.dump());
+    }
 }
 
 // 处理注册业务

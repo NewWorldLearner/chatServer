@@ -237,6 +237,11 @@ CREATE TABLE user (
     state ENUM('online', 'offline') DEFAULT 'offline' NOT NULL COMMENT '登录状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
-## 处理用户注册业务
+## 实现用户注册业务
 
 所谓的用户注册，就是在数据库的user表中添加用户的信息，最重要的就是用户名和密码。
+
+## 实现用户登录业务
+
+用户登录就是当客户端传过来用户的id和密码的时候，查询数据库并进行比对。
+用户登录可能会成功，也可能会失败，需要返回相应的信息给客户端。
