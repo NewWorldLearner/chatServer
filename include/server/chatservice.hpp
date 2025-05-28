@@ -41,6 +41,8 @@ public:
 
     void addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time);
 
+    void loginout(const TcpConnectionPtr &conn, json &js, Timestamp time);
+
     // 创建群组业务
     void createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time);
     // 加入群组业务

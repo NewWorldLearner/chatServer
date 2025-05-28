@@ -318,3 +318,6 @@ CREATE TABLE groupuser (
     FOREIGN KEY (userid) REFERENCES user(id) ON DELETE CASCADE  -- 外键关联用户表
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='群组成员表';
 
+## 实现用户退出业务
+
+实现比较简单，只需要在服务器中去除掉用户的连接信息，并将用户的状态更改为不在线即可。

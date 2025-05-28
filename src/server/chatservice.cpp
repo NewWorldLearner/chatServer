@@ -25,6 +25,7 @@ ChatService::ChatService()
     _msgHandlerMap.insert({REG_MSG, std::bind(&ChatService::reg, this, _1, _2, _3)});
     _msgHandlerMap.insert({ONE_CHAT_MSG, std::bind(&ChatService::oneChat, this, _1, _2, _3)});
     _msgHandlerMap.insert({ADD_FRIEND_MSG, std::bind(&ChatService::addFriend, this, _1, _2, _3)});
+    _msgHandlerMap.insert({LOGINOUT_MSG, std::bind(&ChatService::loginout, this, _1, _2, _3)});
 
     // 群组业务管理相关事件处理回调注册
     _msgHandlerMap.insert({CREATE_GROUP_MSG, std::bind(&ChatService::createGroup, this, _1, _2, _3)});
@@ -246,4 +247,23 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
             _offlineMsgModel.insert(id, js.dump());
         }
     }
+}
+
+// 处理用户退出业务
+void ChatService::loginout(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+
+    {
+        lock_guard<mutex> lock(_connMutex);
+        auto it = _userConnMap.find(userid);
+        if (it != _userConnMap.end())
+        {
+            _userConnMap.erase(it);
+        }
+    }
+
+    // 更新用户的状态信息
+    User user(userid, "", "", "offline");
+    _userModel.updateState(user);
 }
