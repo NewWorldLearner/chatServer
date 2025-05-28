@@ -3,7 +3,8 @@
 #include <iostream>
 #include <functional>
 #include <string>
-#include <chatservice.hpp>
+#include "chatservice.hpp"
+
 
 using namespace std;
 using namespace placeholders;
@@ -61,4 +62,14 @@ void ChatService::reset()
 {
     // 把online状态的用户，设置成offline
     _userModel.resetState();
+}
+
+// 添加好友业务 msgid id friendid
+void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+    int friendid = js["friendid"].get<int>();
+
+    // 存储好友信息
+    _friendModel.insert(userid, friendid);
 }

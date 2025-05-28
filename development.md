@@ -281,3 +281,17 @@ create table offlinemessage(
 
 在之前的代码中，客户端异常退出，服务器能够进行相应的处理，更改用户的状态信息。但是服务器异常退出时，却无法更改用户的状态信息。
 解决办法就是，服务器在重新启动的时候，将所有的用户状态信息更改为不在线。
+
+## 添加好友业务
+
+毫无疑问，我们是需要一张表来存储用户的好友的。
+为了防止好友关系重复添加，需要将用户id和好友id设置为主键。
+理论上来说，不应该每次登录都返回好友信息给客户端的，但是为了简单起见，每次登录时服务器都会将好友信息返回给客户端。
+
+CREATE TABLE friend (
+    userid INT NOT NULL COMMENT '用户ID',
+    friendid INT NOT NULL COMMENT '好友ID',
+    PRIMARY KEY (userid, friendid),
+    CONSTRAINT fk_userid FOREIGN KEY (userid) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_friendid FOREIGN KEY (friendid) REFERENCES user(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='好友关系表';

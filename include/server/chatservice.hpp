@@ -8,6 +8,7 @@
 #include "json.hpp"
 #include "usermodel.hpp"
 #include "offlinemessagemodel.hpp"
+#include "friendmodel.hpp"
 
 using namespace std;
 using namespace muduo;
@@ -37,7 +38,9 @@ public:
 
     void reset();
 
-private:
+    void addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time);
+
+private :
     // 将构造函数私有化，构造单例模式
     ChatService();
 
@@ -53,6 +56,7 @@ private:
     // 数据操作类对象
     UserModel _userModel;
     OfflineMsgModel _offlineMsgModel;
+    FriendModel _friendModel;
 };
 
 #endif
