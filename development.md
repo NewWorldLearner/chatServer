@@ -295,3 +295,26 @@ CREATE TABLE friend (
     CONSTRAINT fk_userid FOREIGN KEY (userid) REFERENCES user(id) ON DELETE CASCADE,
     CONSTRAINT fk_friendid FOREIGN KEY (friendid) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='好友关系表';
+
+## 实现群组业务
+
+我们需要为群组建立一张表。
+对于一个群组来说，需要的基本信息有组id，组名称以及组描述。
+
+CREATE TABLE allgroup (
+    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '组ID',
+    groupname VARCHAR(50) NOT NULL UNIQUE COMMENT '组名称',
+    groupdesc VARCHAR(200) DEFAULT '' NOT NULL COMMENT '组功能描述'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='群组信息表';
+
+对于一个群组来说，它包含许多成员。对于用户来说，一个用户可以加入许多组。
+因此，群组和用户是多对多的关系。为了描述这种关系，我们需要一张中间表。
+
+CREATE TABLE groupuser (
+    groupid INT NOT NULL COMMENT '组ID',
+    userid INT NOT NULL COMMENT '组员ID',
+    grouprole ENUM('creator', 'normal') DEFAULT 'normal' NOT NULL COMMENT '组内角色',
+    PRIMARY KEY (groupid, userid),  -- 联合主键
+    FOREIGN KEY (userid) REFERENCES user(id) ON DELETE CASCADE  -- 外键关联用户表
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='群组成员表';
+
