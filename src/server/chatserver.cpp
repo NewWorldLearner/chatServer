@@ -55,3 +55,10 @@ void ChatServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timesta
     // 回调消息绑定好的事件处理器，执行相应的业务处理
     msgHandler(conn, js, time);
 }
+
+// 服务器异常，业务重置方法
+void ChatService::reset()
+{
+    // 把online状态的用户，设置成offline
+    _userModel.resetState();
+}

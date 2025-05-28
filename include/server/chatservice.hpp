@@ -35,7 +35,9 @@ public:
 
     void oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time);
 
-    private :
+    void reset();
+
+private:
     // 将构造函数私有化，构造单例模式
     ChatService();
 

@@ -276,3 +276,8 @@ create table offlinemessage(
     userid INT COMMENT '用户ID',
     message VARCHAR(1024) NOT NULL COMMENT '用户消息'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='离线消息表';
+
+## 服务器异常退出处理
+
+在之前的代码中，客户端异常退出，服务器能够进行相应的处理，更改用户的状态信息。但是服务器异常退出时，却无法更改用户的状态信息。
+解决办法就是，服务器在重新启动的时候，将所有的用户状态信息更改为不在线。
